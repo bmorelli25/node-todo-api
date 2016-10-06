@@ -33,16 +33,17 @@ app.get('/todos/:id', function (req, res) {
 
 // POST /todos - looks the same as get all
 app.post('/todos', function (req, res) {
-  var body = req.body;
+  var body = _.pick(req.body, 'description', 'completed');
 
   // validate data provided
   if (!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0) {
     return res.status(400).send(); // 400 means bad data provided
   };
 
+  body.description = body.description.trim();
   body.id = todoNextId++;
-  todos.push(body);
 
+  todos.push(body);
   res.json(body); // pass body back to the user
 });
 
