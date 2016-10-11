@@ -15,8 +15,18 @@ app.get('/', function (req, res) {
 });
 
 // GET /todos - all of a specific model
+// GET /todos?completed=true
 app.get('/todos', function (req, res) {
-  res.json(todos);
+  var queryParams = req.query; //has all the query data
+  var filteredTodos = todos;
+
+  if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
+    filteredTodos = _.where(filteredTodos, {completed: true});
+  } else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
+    filteredTodos = _.where(filteredTodos, {completed: false});
+  };
+
+  res.json(filteredTodos);
 });
 
 // GET /todos/:id - return individual todo item
