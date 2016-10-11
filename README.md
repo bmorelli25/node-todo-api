@@ -25,9 +25,10 @@ Query Paramaters:
 ```
 completed=true
 completed=false
+q='searchQueryHere'
 ```
 
-Example: Search for all completed todos:
+Example: Search for all completed todos refrencing work:
 ```
-GET /todos?completed=true
+GET /todos?completed=true&q=work
 ```
