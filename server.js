@@ -18,22 +18,25 @@ app.get('/', function (req, res) {
 // GET /todos - all of a specific model
 // GET /todos?completed=true
 app.get('/todos', function (req, res) {
-  var queryParams = req.query; //has all the query data
-  var filteredTodos = todos;
+  var query = req.query; //has all the query data
+  var where = {completed: true};
+  var todosArray = [];
 
-  if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'true') {
-    filteredTodos = _.where(filteredTodos, {completed: true});
-  } else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false') {
-    filteredTodos = _.where(filteredTodos, {completed: false});
+  if (query.hasOwnProperty('q') && query.q.length > 0) {
+    where.description = {$like: `%${query.q.toLowerCase()}%`};
   };
 
-  if (queryParams.hasOwnProperty('q') && queryParams.q.length > 0) {
-    filteredTodos = _.filter(filteredTodos, (todo) => {
-      return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
-    });
-  }
+  if (query.hasOwnProperty('completed') && query.completed === 'true') {
+    where.completed = true;
+  } else if (query.hasOwnProperty('completed') && query.completed === 'false') {
+    where.completed = false;
+  };
 
-  res.json(filteredTodos);
+  db.todo.findAll({where}).then((todos) => {
+    res.json(todos);
+  }, (e) => {
+    res.status(500).json(e);
+  });
 });
 
 // GET /todos/:id - return individual todo item
