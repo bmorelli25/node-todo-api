@@ -39,13 +39,16 @@ app.get('/todos', function (req, res) {
 // GET /todos/:id - return individual todo item
 app.get('/todos/:id', function (req, res) {
   var todoId = parseInt(req.params.id);
-  var matchedTodo = _.findWhere(todos, {id: todoId});
 
-  if (matchedTodo) {
-    res.json(matchedTodo);
-  } else {
-    res.status(404).send();
-  };
+  db.todo.findById(todoId).then((todo) => {
+    if (!!todo) {
+      res.json(todo.toJSON());
+    } else {
+      res.status(404).send();
+    };
+  }, (e) => {
+    res.status(500).json(e);
+  });
 });
 
 // POST /todos - looks the same as get all
