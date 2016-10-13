@@ -19,8 +19,7 @@ app.get('/', function (req, res) {
 // GET /todos?completed=true
 app.get('/todos', function (req, res) {
   var query = req.query; //has all the query data
-  var where = {completed: true};
-  var todosArray = [];
+  var where = {};
 
   if (query.hasOwnProperty('q') && query.q.length > 0) {
     where.description = {$like: `%${query.q.toLowerCase()}%`};
