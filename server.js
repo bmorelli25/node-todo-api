@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var _ = require('underscore');
 var db = require('./db.js');
+var bcrypt = require('bcryptjs');
 
 var app = express();
 var PORT = process.env.PORT || 3000;
@@ -133,6 +134,34 @@ app.post('/users', function (req, res) {
     res.json(user.toPublicJSON());
   }, (e) => {
     res.status(400).json(e);
+  });
+});
+
+// POST /users/login
+app.post('/users/login', function (req, res) {
+  // take only the email and password attributes
+  var body = _.pick(req.body, 'email', 'password');
+
+  // check if they're both strings, else return 400 'bad request'
+  if (typeof body.email !== 'string' || typeof body.password !== 'string') {
+    return res.status(400).send();
+  };
+
+  // sequelize findOne() -> if there is an email match, validate it.
+  db.user.findOne({
+    where: {
+      email: body.email
+    }
+  }).then((user) => {
+    if (!user || !bcrypt.compareSync(body.password, user.get('password_hash'))) {
+      //if the email doesn't exist, OR, we've passed in a bad password return 401 'unable to auth'
+      return res.status(401).send();
+    };
+    //else, return the publicJSON for the user (temporary)
+    res.json(user.toPublicJSON());
+  }, (e) => {
+    //errors return 500 'internal server error'
+    res.status(500).json(e);
   });
 });
 
