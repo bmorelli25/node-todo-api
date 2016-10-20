@@ -67,4 +67,4 @@ Step 3. **Create Todo** ```POST /todos``` with header key: ```Auth``` and value 
 	"completed": false
 }
 ```
-Step 4. **Search for above todo refrencing cat and not completed:** ```GET /todos?completed=true&q=work```
+Step 4. **Search for above todo refrencing cat and not completed:** ```GET /todos?completed=false&q=cat```
