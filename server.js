@@ -159,21 +159,26 @@ app.post('/users', function (req, res) {
 // POST /users/login
 app.post('/users/login', function (req, res) {
   var body = _.pick(req.body, 'email', 'password');
+  var userInstance;
 
   db.user.authenticate(body).then((user) => {
+    //runs after authenticate finishes
     var token = user.generateToken('authentication');
+    userInstance = user;
 
-    if (token) {
-      res.header('Auth', token).json(user.toPublicJSON());
-    } else {
-      res.status(401).send();
-    };
-  }, () => {
+    return db.token.create({
+      token: token
+    });
+
+  }).then((tokenInstance) => { //runs after token.create finishes
+    console.log('TEST TEST TEST: ', tokenInstance)
+    res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
+  }).catch(() => { //runs if anything goes wrong along the way
     res.status(401).send(); //for security reasons, we're only sending a generic message back
   });
 });
 
-db.sequelize.sync({force:true}).then(() => {
+db.sequelize.sync({force: true}).then(() => {
   app.listen(PORT, function () {
     console.log('Express listening on PORT ' + PORT);
   });
