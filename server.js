@@ -61,7 +61,11 @@ app.post('/todos', middleware.requireAuthentication, function (req, res) {
   var body = _.pick(req.body, 'description', 'completed');
 
   db.todo.create(body).then((todo) => {
-    res.json(todo.toJSON());
+    req.user.addTodo(todo).then(() => { //creates user association
+      return todo.reload(); // reload todo since the one we have in the database is different then this one
+    }).then((todo) => { //this gets passed an updated version of the todo
+      res.json(todo.toJSON());
+    });
   }, (e) => {
     res.status(400).json(e);
   });
