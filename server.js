@@ -173,7 +173,7 @@ app.post('/users/login', function (req, res) {
   });
 });
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({force:true}).then(() => {
   app.listen(PORT, function () {
     console.log('Express listening on PORT ' + PORT);
   });
