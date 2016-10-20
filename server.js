@@ -171,11 +171,19 @@ app.post('/users/login', function (req, res) {
     });
 
   }).then((tokenInstance) => { //runs after token.create finishes
-    console.log('TEST TEST TEST: ', tokenInstance)
     res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
   }).catch(() => { //runs if anything goes wrong along the way
     res.status(401).send(); //for security reasons, we're only sending a generic message back
   });
+});
+
+// DELETE /users/login
+app.delete('/users/login', middleware.requireAuthentication, function (req, res) {
+  req.token.destroy().then(() => {
+    res.status(204).send();
+  }).catch(() => {
+    res.status(500).send();
+  })
 });
 
 db.sequelize.sync({force: true}).then(() => {
