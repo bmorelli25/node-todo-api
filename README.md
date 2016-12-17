@@ -14,7 +14,7 @@ This web application stores a todo list for the current logged in user. Users ca
 * [crypto-js](https://code.google.com/archive/p/crypto-js/) - cryptographic algorithms. Not updated often. May be best to update to [Forge](https://github.com/digitalbazaar/forge) at some point soon
 * [JSON Web Tokens](https://jwt.io/) - Allows us to decode, verify, and generate JWT's. Once the user is logged in, each subsequent request includes the JWT in the HTTP header - allowing the user to access routes and resources permitted with their token.
 * [Sequelize](http://docs.sequelizejs.com/en/v3/) - Promise based ORM for Node.js
-* [postresQL](https://www.npmjs.com/package/pg) - Non blocking PostreSQL client for Node.js
+* [postgresQL](https://www.npmjs.com/package/pg) - Non blocking PostgreSQL client for Node.js
 * [sqlite3](sqlite3) - Asynch SQlite3 bindings for node
 
 -----
